@@ -15,7 +15,8 @@ export default function NotesPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  const API_URL = "https://ainotes.duckdns.org/api";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 
   useEffect(() => {
     async function getToken() {
@@ -156,9 +157,17 @@ export default function NotesPage() {
                       Delete
                     </button>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 mt-2">
-                    {note.transcription.split("\n").map((line, index) =>
-                      line.trim() ? <li key={index}>{line}</li> : null)}</p>
+              
+                  {/* ✅ Fixed the <li> issue by wrapping in <ul> */}
+                  <ul className="text-gray-600 dark:text-gray-300 mt-2 space-y-1">
+                  {note.transcription.split("\n").map((line, index) =>
+                    line.trim() ? (
+                      <li key={index} className="ml-4 list-disc">
+                        {line.replace(/^- /, "")}
+                      </li>
+                    ) : null
+                  )}
+                  </ul>
                 </li>
               ))
             )}
